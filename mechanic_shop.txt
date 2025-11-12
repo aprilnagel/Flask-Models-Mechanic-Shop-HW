@@ -1,0 +1,59 @@
+Step 1: Identify your entities
+    - mechanic
+    - customer
+    - vehicle
+    - service_apppointment
+    
+
+Step 2: Adding fields to your entities
+    - what makes up this entity?
+    - what information do you need to store?
+
+Step 3: Create relationships between your entities
+    - how do these entities interact with each other?
+    - Add the PK/FK (Primary Key/Foreign Key) to establish connections
+    - what type of relationship exists (one-to-one, one-to-many, many-to-many)?
+
+
+mechanic table:
+    - mechanic_id (PK)
+    - name
+    - specialization
+    - phone_number
+    - email
+    - hire_date
+    - experience_years
+
+customer table:
+    - customer_id (PK)
+    - name
+    - phone_number
+    - email
+    - address
+    - registration_date
+
+vehicle table:
+    - VIN (PK)
+    - customer_id (FK)
+    - make
+    - model
+    - year
+    - vin
+    - license_plate
+    - service_history
+
+service_appointment table:
+    - appointment_id (PK)
+    - VIN (FK)
+    - mechanic_id (FK)
+    - service_date
+    - service_type
+    - service_cost
+    - notes
+
+relationships:
+    - one customer can have many vehicles (one-to-many)
+    - one mechanic can service many vehicles (one-to-many)
+    - one vehicle can be serviced by many mechanics over time (many-to-many)
+    - one service appointment is for one vehicle (one-to-one)
+    - 
