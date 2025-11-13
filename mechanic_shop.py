@@ -123,7 +123,7 @@ def delete_customer(customers_id):
     db.session.delete(customer)
     db.session.commit()
     return jsonify({"message": f"Customer deleted{customers_id}"}), 200
-
+#adding this to commit the changes to the database
 
 with app.app_context():
     db.create_all()  #Create the database tables
