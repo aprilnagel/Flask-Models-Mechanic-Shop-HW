@@ -122,7 +122,7 @@ def delete_customer(customers_id):
         return jsonify({"message": "Customer not found"}), 404
     db.session.delete(customer)
     db.session.commit()
-    return jsonify({"message": f"Customer deleted"{customers_id}}), 200
+    return jsonify({"message": f"Customer deleted{customers_id}"}), 200
 
 
 with app.app_context():
