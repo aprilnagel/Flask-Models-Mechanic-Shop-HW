@@ -3,9 +3,10 @@ from .schemas import service_ticket_schema, service_tickets_schema
 from flask import request, jsonify
 from marshmallow import ValidationError
 from app.models import db, Service_Tickets
-
+from app.extensions import limiter, cache
 
 @service_tickets_bp.route('/service_tickets', methods=['POST'])
+@limiter.limit("600 per day", override_defaults=True)
 def create_service_ticket():
     try:
         data = service_ticket_schema.load(request.json)
@@ -22,6 +23,7 @@ def create_service_ticket():
 
 #read service tickets route:
 @service_tickets_bp.route('/service_tickets', methods=['GET'])
+@cache.cached(timeout=30)
 def get_service_tickets():
     service_tickets = db.session.query(Service_Tickets).all()
     return service_tickets_schema.jsonify(service_tickets), 200
@@ -44,6 +46,7 @@ def delete_service_ticket(service_ticket_id):
 
 #UPDATE A SERVICE TICKET
 @service_tickets_bp.route("/service_tickets/<int:service_ticket_id>", methods=["PUT"])
+@limiter.limit("5 per day")
 def update_service_ticket(service_ticket_id):
     
     #Query the service ticket by id

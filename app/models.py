@@ -28,6 +28,7 @@ class Customers(db.Model):
     first_name: Mapped[str] = mapped_column(String(150), nullable=False)
     last_name: Mapped[str] = mapped_column(String(150), nullable=False)
     email: Mapped[str] = mapped_column(String(250), nullable=False, unique=True)
+    password: Mapped[str] = mapped_column(String(200), nullable=False)
     phone: Mapped[str] = mapped_column(String(20), nullable=False, unique=True)
     address: Mapped[str] = mapped_column(String(300), nullable=False)
     

@@ -6,4 +6,5 @@ class CustomerSchema(ma.SQLAlchemyAutoSchema):
         model = Customers
 
 customer_schema = CustomerSchema()
-customers_schema = CustomerSchema(many=True)
+customers_schema = CustomerSchema(many=True)   
+login_customer_schema = CustomerSchema(exclude=['first_name', 'last_name', 'phone', 'address'])
