@@ -25,7 +25,7 @@ def login_customer():
       "token": token
     })
 
-@customers_bp.route('/customers', methods=['POST'])
+@customers_bp.route("",methods=['POST'])
 @limiter.limit("200 per day")
 def create_customer():
     try:
@@ -44,20 +44,20 @@ def create_customer():
     return customer_schema.jsonify(new_customer), 201
 
 #read customers route:
-@customers_bp.route('/customers', methods=['GET'])
+@customers_bp.route("", methods=['GET'])
 def get_customers():
     customers = db.session.query(Customers).all()
     return customers_schema.jsonify(customers), 200
 
 #read individual customer route:
-@customers_bp.route('/customers/<int:customers_id>', methods=['GET'])
+@customers_bp.route('/<int:customers_id>', methods=['GET'])
 @limiter.limit("15 per hour")
 def get_customer(customers_id):
     customer = db.session.get(Customers, customers_id)
     return customer_schema.jsonify(customer), 200
 
 #delete customer route:
-@customers_bp.route('/customers/<int:customer_id>', methods=['DELETE'])
+@customers_bp.route('/<int:customer_id>', methods=['DELETE'])
 @limiter.limit("5 per day")
 @token_required #created in auth.py. This decorator will ensure that a valid token is provided before allowing access to this route.
 def delete_customer(customers_id):
@@ -69,13 +69,13 @@ def delete_customer(customers_id):
     return jsonify({"message": f"Customer deleted{customers_id}"}), 200
 
 #UPDATE A USER
-@customers_bp.route("/customers/<int:customers_id>", methods=["PUT"])
+@customers_bp.route("/<int:customers_id>", methods=["PUT"])
 @limiter.limit("1 per month")
 def update_user(customers_id):
   #Query the user by id
   customer = db.session.get(Customers, customers_id) #Query for our user to update
   if not customer: #Checking if I got a user with that id
-    return jsonify({"message": "User not found"}), 404 
+    return jsonify({"message": "Customer not found"}), 404 
   #Validate and Deserialize the updates that they are sending in the body of the request
   try:
     customer_data = customer_schema.load(request.json)

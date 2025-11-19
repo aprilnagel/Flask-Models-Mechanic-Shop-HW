@@ -16,12 +16,12 @@ db = SQLAlchemy(model_class=Base)
 #many to many relationship between mechanics and service tickets
 mechanic_service_ticket = Table(
     "mechanic_service_ticket", 
-    db.metadata,
+    Base.metadata,
     Column("mechanic_id", Integer, ForeignKey("mechanics.id")),
     Column("service_ticket_id", Integer, ForeignKey("service_tickets.id"))
 )
 
-class Customers(db.Model):
+class Customers(Base):
     __tablename__ = "customers"
     
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -36,7 +36,7 @@ class Customers(db.Model):
     #one to many with service tickets
     service_tickets_customer: Mapped[list["Service_Tickets"]] = relationship("Service_Tickets", back_populates="customer")
 
-class Service_Tickets(db.Model):
+class Service_Tickets(Base):
     __tablename__ = "service_tickets"
     
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -55,7 +55,7 @@ class Service_Tickets(db.Model):
     #many to many with mechanics
     mechanics_service_tickets: Mapped[list["Mechanics"]] = relationship("Mechanics", secondary=mechanic_service_ticket, back_populates="service_tickets_mechanics")
     
-class Mechanics(db.Model):
+class Mechanics(Base):
     __tablename__ = "mechanics"
     
     id: Mapped[int] = mapped_column(primary_key=True)

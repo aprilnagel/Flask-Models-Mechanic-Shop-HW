@@ -1,4 +1,4 @@
-from flask import Flask, app
+from flask import Flask
 from .models import db
 from .extensions import ma, limiter, cache
 from .blueprints.customers import customers_bp
