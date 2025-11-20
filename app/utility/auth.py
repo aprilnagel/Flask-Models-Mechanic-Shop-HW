@@ -5,12 +5,12 @@ from functools import wraps
 from flask import request, jsonify
 
 SECRET_KEY = "supersecretkey"
-def encode_token(customers_id, role="customers"):
+
+def encode_token(customers_id):
     payload = {
         'exp': datetime.now(timezone.utc) + timedelta(days=0, hours=1), # Set token expiration.Token expires in 1 hour
         'iat': datetime.now(timezone.utc),  # Issued at time
-        'sub': str(customers_id), #VERY IMPORTANT, SET YOUR USER ID TO A STR
-        'role': role #You will probably not have role unless you add it to your models
+        'sub': str(customers_id), #VERY IMPORTANT, SET YOUR USER ID TO A STRING
     }
     token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
     return token

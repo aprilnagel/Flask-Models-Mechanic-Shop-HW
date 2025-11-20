@@ -1,0 +1,14 @@
+{
+  "workspace": {
+    "id": "b9294ca0-3048-45d7-84cb-342caefcf6a1"
+  },
+  "entities": {
+    "collections": [
+      "..\\postman\\collections\\Mechanic Shop Action Collection.postman_collection.json"
+    ],
+    "environments": [],
+    "specs": [],
+    "flows": [],
+    "globals": []
+  }
+}
