@@ -1,29 +1,12 @@
 from app.blueprints.customers import customers_bp
-from .schemas import customer_schema, customers_schema, login_customer_schema
+from .schemas import customer_schema, customers_schema
 from flask import request, jsonify
 from marshmallow import ValidationError
 from app.models import Customers, db
 from app.extensions import limiter
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.utility.auth import encode_token, token_required
 
-@customers_bp.route('/login', methods=['POST'])
-# @limiter.limit("5 per 10 minutes")
-def login():
-  try:
-    data = login_customer_schema.load(request.json)#JSON > Python
-  except ValidationError as err:
-    return jsonify(err.messages), 400 #return the error messages and a 400 status code if validation fails
-  
-  customer = db.session.query(Customers).where(Customers.email == data['email']).first()
 
-  if customer and check_password_hash(customer.password, data['password']):
-    #create token for customer
-    token = encode_token(customer.id)
-    return jsonify({
-      "message": f"Welcome {customer.first_name} {customer.last_name}",
-      "token": token,
-    })
 
 #CREATE CUSTOMER ROUTE
 @customers_bp.route("",methods=['POST'])
@@ -34,7 +17,6 @@ def create_customer():
     except ValidationError as err:
         return jsonify(err.messages), 400
     
-    data['password'] = generate_password_hash(data['password']) #resetting the key value to the hash of the current value. hash the password before storing it in the database
     
 #create a new customer instance
     new_customer = Customers(**data)
@@ -58,41 +40,34 @@ def get_customer(customers_id):
     return customer_schema.jsonify(customer), 200
 
 #delete customer route:
-@customers_bp.route("", methods=['DELETE'])
-# @limiter.limit("5 per day")
-@token_required #created in auth.py. This decorator will ensure that a valid token is provided before allowing access to this route.
-def delete_customer():
-    token_id = request.logged_in_customer_id
-    customer = db.session.get(Customers, token_id)
-    
+@customers_bp.route('', methods=['DELETE'])
+def delete_customer(customer_id):
+    customer = db.session.get(Customers, customer_id)
+    if not customer:
+        return jsonify({"message": "Customer not found"}), 404
     db.session.delete(customer)
     db.session.commit()
-    return jsonify({"message": f"Successfully deleted user {token_id}"}), 200
+    return jsonify({"message": f"Customer deleted {customer_id}"}), 200
 
-#UPDATE A USER
+
+#UPDATE CUSTOMER ROUTE
 @customers_bp.route("", methods=["PUT"])
-# @limiter.limit("500 per month")
-@token_required
-def update_user():
-  #Query the user by id
-  customers_id = request.logged_in_customer_id
-  customer = db.session.get(Customers, customers_id) #Query for our user to update
-  if not customer: #Checking if I got a user with that id
-    return jsonify({"message": "Customer not found"}), 404 
-  #Validate and Deserialize the updates that they are sending in the body of the request
-  try:
-    customer_data = customer_schema.load(request.json)
-  except ValidationError as e:
-    return jsonify({"message": e.messages}), 400
-  # for each of the values that they are sending, we will change the value of the queried object
-  
-  customer_data['password'] = generate_password_hash(customer_data['password'])
-  # if user_data['email']:
-  #   user.email = user_data["email"]
-
-  for key, value in customer_data.items():
-    setattr(customer, key, value) #setting object, Attribute, value to replace
-  # commit the changes
-  db.session.commit()
-  # return a response
-  return customer_schema.jsonify(customer), 200
+def update_customer(customer_id):
+    #Query the mechanic by id
+    customer = db.session.get(Customers, customer_id) #Query for our mechanic to update
+    if not customer: #Checking if I got a mechanic with that id
+        return jsonify({"message": "Customer not found"}), 404 
+    #Validate and Deserialize the updates that they are sending in the body of the request
+    try:
+        customer_data = customer_schema.load(request.json)
+    except ValidationError as e:
+        return jsonify({"message": e.messages}), 400
+    # for each of the values that they are sending, we will change the value of the queried object
+    
+    # 
+    
+    for key, value in customer_data.items():
+        setattr(customer, key, value)
+    
+    db.session.commit() #Save the changes to the database
+    return customer_schema.jsonify(customer), 200
