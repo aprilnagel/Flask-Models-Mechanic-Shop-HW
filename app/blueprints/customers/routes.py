@@ -40,21 +40,21 @@ def get_customer(customers_id):
     return customer_schema.jsonify(customer), 200
 
 #delete customer route:
-@customers_bp.route('', methods=['DELETE'])
-def delete_customer(customer_id):
-    customer = db.session.get(Customers, customer_id)
+@customers_bp.route('/<int:customers_id>', methods=['DELETE'])
+def delete_customer(customers_id):
+    customer = db.session.get(Customers, customers_id)
     if not customer:
         return jsonify({"message": "Customer not found"}), 404
     db.session.delete(customer)
     db.session.commit()
-    return jsonify({"message": f"Customer deleted {customer_id}"}), 200
+    return jsonify({"message": f"Customer deleted {customers_id}"}), 200
 
 
 #UPDATE CUSTOMER ROUTE
-@customers_bp.route("", methods=["PUT"])
-def update_customer(customer_id):
+@customers_bp.route('/<int:customers_id>', methods=["PUT"])
+def update_customer(customers_id):
     #Query the mechanic by id
-    customer = db.session.get(Customers, customer_id) #Query for our mechanic to update
+    customer = db.session.get(Customers, customers_id) #Query for our mechanic to update
     if not customer: #Checking if I got a mechanic with that id
         return jsonify({"message": "Customer not found"}), 404 
     #Validate and Deserialize the updates that they are sending in the body of the request
