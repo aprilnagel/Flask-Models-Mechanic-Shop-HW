@@ -8,7 +8,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 
-#CREATE CUSTOMER ROUTE
+#____________________________CREATE CUSTOMER ROUTE____________________________
+
 @customers_bp.route("",methods=['POST'])
 # @limiter.limit("200 per day")
 def create_customer():
@@ -19,27 +20,33 @@ def create_customer():
     
     
 #create a new customer instance
-    new_customer = Customers(**data)
+    new_customer = Customers(**data) #Unpack the data dictionary into the Customer model
     
     db.session.add(new_customer)
     
     db.session.commit()
     return customer_schema.jsonify(new_customer), 201
 
-#read customers route:
+
+#____________________________READ ALL CUSTOMERS ROUTE____________________________
+
 @customers_bp.route("", methods=['GET'])
 def get_customers():
     customers = db.session.query(Customers).all()
     return customers_schema.jsonify(customers), 200
 
-#read individual customer route:
+
+#____________________________READ A SINGLE CUSTOMER ROUTE____________________________
+
 @customers_bp.route('/<int:customers_id>', methods=['GET'])
 # @limiter.limit("15 per hour")
 def get_customer(customers_id):
     customer = db.session.get(Customers, customers_id)
     return customer_schema.jsonify(customer), 200
 
-#delete customer route:
+
+#____________________________DELETE CUSTOMER ROUTE____________________________
+
 @customers_bp.route('/<int:customers_id>', methods=['DELETE'])
 def delete_customer(customers_id):
     customer = db.session.get(Customers, customers_id)
@@ -50,7 +57,8 @@ def delete_customer(customers_id):
     return jsonify({"message": f"Customer deleted {customers_id}"}), 200
 
 
-#UPDATE CUSTOMER ROUTE
+#____________________________UPDATE CUSTOMER ROUTE____________________________
+
 @customers_bp.route('/<int:customers_id>', methods=["PUT"])
 def update_customer(customers_id):
     #Query the mechanic by id

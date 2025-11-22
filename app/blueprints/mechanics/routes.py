@@ -6,7 +6,8 @@ from app.models import db, Mechanics
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.utility.auth import encode_token, token_required
 
-#________________________________#MECHANIC LOGIN ROUTE________________________________________________
+
+#________________________#MECHANIC LOGIN ROUTE________________________
 
 @mechanics_bp.route('/login', methods=['POST'])
 # @limiter.limit("5 per 10 minutes")
@@ -25,7 +26,9 @@ def login():
       "message": f"Welcome {mechanic.first_name} {mechanic.last_name}",
       "token": token,
     }), 200
-#____________________________________#CREATE MECHANIC ROUTE_______________________________________________
+    
+    
+#_______________________#CREATE MECHANIC ROUTE________________________
 
 @mechanics_bp.route('', methods=['POST'])
 def create_mechanic():
@@ -42,9 +45,10 @@ def create_mechanic():
     
     db.session.commit()
     return mechanic_schema.jsonify(new_mechanic), 201
+  
 
-#____________________________________#READ MECHANICS ROUTES_______________________________________________
-#read mechanics route:
+#________________________#READ MECHANICS ROUTES________________________
+
 @mechanics_bp.route('', methods=['GET'])
 def get_mechanics():
     mechanics = db.session.query(Mechanics).all()
@@ -55,7 +59,9 @@ def get_mechanics():
 def get_mechanic(mechanic_id):
     mechanic = db.session.get(Mechanics, mechanic_id)
     return mechanic_schema.jsonify(mechanic), 200
-#____________________________________#DELETE MECHANIC ROUTE_______________________________________________
+  
+  
+#________________________#DELETE A MECHANIC ROUTE________________________
 
 @mechanics_bp.route("", methods=['DELETE']) #Deleted the ID in the route so that users can only delete their own account
 # @limiter.limit("5 per day")
@@ -67,8 +73,10 @@ def delete_mechanic():
     db.session.delete(mechanic)
     db.session.commit()
     return jsonify({"message": f"Successfully deleted user {token_id}"}), 200
+  
 
-#UPDATE A MECHANIC  
+#________________________#UPDATE A MECHANIC ROUTE________________________
+
 @mechanics_bp.route("", methods=["PUT"]) #No ID in the route. Users can only update their own info
 # @limiter.limit("500 per month")
 @token_required

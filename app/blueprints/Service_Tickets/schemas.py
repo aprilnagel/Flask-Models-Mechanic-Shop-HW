@@ -4,6 +4,7 @@ from app.models import Service_Tickets
 class ServiceTicketSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Service_Tickets
+        include_fk = True
 
 
 service_ticket_schema = ServiceTicketSchema()
