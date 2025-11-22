@@ -244,7 +244,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"april@gmail.com\",\r\n    \"password\": \"april\"\r\n}\r\n",
+							"raw": "{\r\n    \"email\": \"mech1@gmail.com\",\r\n    \"password\": \"1234\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -252,7 +252,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:5000/customers/login",
+							"raw": "http://127.0.0.1:5000/mechanics/login",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -262,7 +262,7 @@
 							],
 							"port": "5000",
 							"path": [
-								"customers",
+								"mechanics",
 								"login"
 							]
 						}
@@ -411,6 +411,14 @@
 								"mechanics"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "My Tickets",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}

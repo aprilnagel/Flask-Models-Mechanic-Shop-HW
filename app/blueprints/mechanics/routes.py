@@ -1,5 +1,6 @@
 from app.blueprints.mechanics import mechanics_bp
 from .schemas import mechanic_schema, mechanics_schema, login_mechanic_schema
+from app.blueprints.Service_Tickets.schemas import service_tickets_schema
 from flask import request, jsonify
 from marshmallow import ValidationError
 from app.models import db, Mechanics
@@ -103,3 +104,15 @@ def update_mechanic():
   db.session.commit()
   # return a response
   return mechanic_schema.jsonify(mechanic), 200
+
+#____________________GET MY TICKETS ROUTE____________________
+
+@mechanics_bp.route('/my_tickets', methods=['GET'])
+@token_required
+def get_my_tickets():
+    mechanic_id = request.logged_in_mechanic_id #Get the mechanic ID from the token
+    mechanic = db.session.get(Mechanics, mechanic_id) #Query for the mechanic
+    if not mechanic:
+        return jsonify({"message": "Mechanic not found"}), 404 #If no mechanic found, return 404
+    tickets = mechanic.service_tickets_mechanics #Create a variable and show the tickets associated with that mechanic based on the relationship defined in the model. 
+    return service_tickets_schema.jsonify(tickets), 200
